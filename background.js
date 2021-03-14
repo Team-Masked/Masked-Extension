@@ -1,5 +1,5 @@
 //Listen for when a Tab changes state
-const BLOCKED_URLS = ["https://www.youtube.com/watch?v=aFMLMQaUrRw"];
+const BLOCKED_URLS = ["https://www.youtube.com/watch?v=DXUAyRRkI6k"];
 const isBlockedURL = (url) => {
     for (blockedURL of BLOCKED_URLS) {
         if (url === blockedURL) return true;
@@ -15,22 +15,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         // });
         if (isBlockedURL(tab.url)) {
             console.log("Blocking", tab.url);
-            chrome.tabs.sendMessage(
-                tabId,
-                { blockContent: true, redirectURL: "google.com" },
-                (response) => {
-                    console.log(response?.status);
-                }
-            );
+            chrome.tabs.sendMessage(tabId, {
+                blockContent: true,
+                redirectURL: "https://www.youtube.com/watch?v=lyelxGIydeQ",
+            });
         } else {
             console.log("Unblocking", tab.url);
-            chrome.tabs.sendMessage(
-                tabId,
-                { blockContent: false },
-                (response) => {
-                    console.log(response?.status);
-                }
-            );
+            chrome.tabs.sendMessage(tabId, { blockContent: false });
         }
     }
 });

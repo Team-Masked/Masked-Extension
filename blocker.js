@@ -13,7 +13,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log("EXTENSION IS ACTIVE");
         const videoPlayer = document.querySelector("video");
         videoPlayer.pause();
-        // const [x, y] = getPos(videoPlayer);
+
+        if (request.redirectURL !== undefined) {
+            blocker.onclick = () => {
+                window.open(request.redirectURL, "_blank");
+                tobeblocked = false;
+                document.body.removeChild(blocker);
+            };
+        }
         document.body.appendChild(blocker);
         setInterval(() => {
             if (tobeblocked) {
@@ -39,8 +46,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.blockContent === false) {
         tobeblocked = false;
         document.body.removeChild(blocker);
-
         sendResponse({ status: "unblocked" });
     }
-    return false;
+    return true;
 });
