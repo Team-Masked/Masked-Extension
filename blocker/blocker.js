@@ -28,6 +28,7 @@ const tooltiptext = document.createElement("span");
 tooltiptext.className = "tooltiptext";
 tooltip.appendChild(tooltiptext);
 blocker.appendChild(tooltip);
+console.log("IN BLOCKER.JS");
 
 const renderBlocker = (videoPlayer) => {
     if (tobeblocked) {

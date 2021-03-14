@@ -1,9 +1,28 @@
+// FIX ME : Whitelist url
+
+// ############################## Blocker ##################################
 //Listen for when a Tab changes state
 const BLOCKED_URLS = ["https://www.youtube.com/watch?v=DXUAyRRkI6k"];
+let WHITELISTED_URLS = [];
+chrome.storage.sync.get("sites", (response) => {
+    console.log(response);
+    WHITELISTED_URLS = response.sites;
+});
+
 const isBlockedURL = (url) => {
     for (blockedURL of BLOCKED_URLS) {
         console.log(blockedURL, url);
         if (url === blockedURL) return true;
+    }
+    return false;
+};
+const isWhitelistedURL = (url) => {
+    console.log("Whitelisted URL: ", WHITELISTED_URLS);
+    for (whitelistedURL of WHITELISTED_URLS) {
+        const pattern = new RegExp(whitelistedURL);
+        if (pattern.test(url)) {
+            return true;
+        }
     }
     return false;
 };
@@ -14,11 +33,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         // chrome.tabs.sendMessage(tabId, {data: tab}, function(response) {
         //     console.log(response);
         // });
-        if (isBlockedURL(tab.url)) {
+        if (isBlockedURL(tab.url) && !isWhitelistedURL(tab.url)) {
             console.log("Blocking", tab.url);
             chrome.tabs.sendMessage(tabId, {
                 blockContent: true,
-                redirectURL: `https://masked.io/report?url=${clickData.pageUrl}`,
+                redirectURL: `https://masked.io/report?url=${tab.url}`,
                 contains: "cats, cuteness",
             });
         } else {
@@ -28,7 +47,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 });
 
-// Context Menu
+// ############################## Context Menu #############################
 let contextMenuItem = {
     id: "reportRedirect",
     title: "Report Video in Page",
@@ -61,4 +80,10 @@ chrome.contextMenus.onClicked.addListener((clickData) => {
             );
         });
     }
+});
+
+// ############################## Options ##################################
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    console.log(changes);
+    WHITELISTED_URLS = changes.sites.newValue;
 });

@@ -4,7 +4,7 @@
     "description": "The face you know, the story you don't.",
     "version": "0.1",
     "incognito": "spanning",
-    "permissions": ["tabs", "contextMenus"],
+    "permissions": ["tabs", "contextMenus", "storage"],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
@@ -25,7 +25,7 @@
     },
     "page_action": {
         "default_icon": "assets/icons/icon_16x16.png",
-        "default_popup": "popup.html",
         "default_title": "Masked"
-    }
+    },
+    "options_page": "options/options.html"
 }
