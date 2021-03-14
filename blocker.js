@@ -95,14 +95,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 ).innerText = `This video has been reported as it contains: ${request.contains}`;
             }
         }
-        // setInterval(() => {
-
-        // }, 10);
-        sendResponse({ status: "blocked" });
     } else if (request.blockContent === false) {
         tobeblocked = false;
         document.body.removeChild(blocker);
-        sendResponse({ status: "unblocked" });
     }
-    return true;
+    if (request.getInfo === true) {
+        console.log("getting info");
+        if (document.querySelector("video")) {
+            sendResponse({ videoElementPresent: true });
+        } else {
+            sendResponse({ videoElementPresent: false });
+        }
+        return true;
+    }
+    if (request.redirect === true) {
+        window.open(request.redirectURL, "_blank");
+    }
+    if (request.type === "alert") {
+        alert(request.message);
+    }
 });
