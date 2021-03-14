@@ -19,43 +19,69 @@ blocker.appendChild(logoContainer);
 const textContainer = document.createElement("div");
 textContainer.className = "text-container";
 textContainer.innerText =
-    "This video contains unethical content. Click to find out more.";
+    "This video might contain unethical content. Click to find out more.";
 blocker.appendChild(textContainer);
+
+const renderBlocker = (videoPlayer) => {
+    if (tobeblocked) {
+        const {
+            x,
+            y,
+            width,
+            height,
+            top,
+            right,
+            bottom,
+            left,
+        } = videoPlayer.getBoundingClientRect();
+        blocker.style.width = `${width + 5}px`;
+        blocker.style.height = `${height + 5}px`;
+        blocker.style.top = `${top}px`;
+        blocker.style.left = `${left}px`;
+        videoPlayer.pause();
+        console.log(videoPlayer.getBoundingClientRect());
+    }
+};
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.blockContent === true) {
         tobeblocked = true;
         console.log("MASKED EXTENSION IS ACTIVE");
-        const videoPlayer = document.querySelector("video");
-        videoPlayer.pause();
+        let videoPlayer;
+        videoPlayer = document.querySelector("video");
+        console.log(videoPlayer);
+        setInterval(() => {
+            videoPlayer = document.querySelector("video");
+            console.log(videoPlayer);
+            videoPlayer.pause();
+        }, 5000);
 
         if (request.redirectURL !== undefined) {
-            blocker.onclick = () => {
-                window.open(request.redirectURL, "_blank");
-                tobeblocked = false;
-                document.body.removeChild(blocker);
-            };
-        }
-        document.body.appendChild(blocker);
-        setInterval(() => {
             if (tobeblocked) {
-                const {
-                    x,
-                    y,
-                    width,
-                    height,
-                    top,
-                    right,
-                    bottom,
-                    left,
-                } = videoPlayer.getBoundingClientRect();
-                blocker.style.width = `${width + 5}px`;
-                blocker.style.height = `${height + 5}px`;
-                blocker.style.top = `${top}px`;
-                blocker.style.left = `${left}px`;
-                videoPlayer.pause();
+                blocker.onclick = () => {
+                    window.open(request.redirectURL, "_blank");
+                    tobeblocked = false;
+                    document.body.removeChild(blocker);
+                };
             }
-        }, 10);
+        }
+        document.body.insertBefore(blocker, document.body.children[0]);
+        renderBlocker(videoPlayer);
+        window.onscroll = () => {
+            renderBlocker(videoPlayer);
+        };
+        window.onchange = () => {
+            renderBlocker(videoPlayer);
+        };
+        window.onresize = () => {
+            renderBlocker(videoPlayer);
+        };
+        videoPlayer.onplay = () => {
+            renderBlocker(videoPlayer);
+        };
+        // setInterval(() => {
+
+        // }, 10);
         sendResponse({ status: "blocked" });
     } else if (request.blockContent === false) {
         tobeblocked = false;
