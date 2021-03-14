@@ -3,13 +3,19 @@
 // //     const classes = linkElement.classList
 // // }
 // allLinks.filter(isThumbLink);
-const BLOCKED_URLS = ["https://www.youtube.com/watch?v=aFMLMQaUrRw"];
-const isBlockedURL = (url) => {
-    for (blockedURL of BLOCKED_URLS) {
-        if (url === blockedURL) return true;
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.blockContent === true) {
+        console.log("EXTENSION IS ACTIVE");
+        const videoPlayer = document.querySelector("video");
+        const blocker = document.createElement("div");
+        videoPlayer.pause();
+        videoPlayer.autoplay = false;
+        blocker.className = "blocker";
+        console.log(videoPlayer);
+        videoPlayer.classList.add("tobeblocked");
+        videoPlayer.parentNode?.parentNode.appendChild(blocker);
+
+        sendResponse({ status: "blocked" });
+        return true;
     }
-    return false;
-};
-console.log("EXTENSION IS ACTIVE");
-const videoPlayer = document.querySelector("video");
-console.log(videoPlayer);
+});
