@@ -1,11 +1,5 @@
 //Listen for when a Tab changes state
-const BLOCKED_URLS = [
-    "https://www.youtube.com/watch?v=DXUAyRRkI6k",
-    "https://xhamster7.desi/videos/newly-married-wife-fuck-with-relative-boy-xhQdNfa",
-    "https://privatehomeclips.com/videos/7638201/drunk-sleeping-young-stepsister-katty-west-was-fucked-and-creampied-by-her-brother/",
-    "https://spankbang.com/539ed/video/you+know+who",
-    "https://spankbang.com/539ed/video/you+know+who",
-];
+const BLOCKED_URLS = ["https://www.youtube.com/watch?v=DXUAyRRkI6k"];
 const isBlockedURL = (url) => {
     for (blockedURL of BLOCKED_URLS) {
         console.log(blockedURL, url);
