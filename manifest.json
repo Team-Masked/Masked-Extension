@@ -1,0 +1,18 @@
+{
+    "manifest_version": 2,
+    "name": "Masked Extension",
+    "description": "Helping make ethical pornography a reality",
+    "version": "0.1",
+    "incognito": "spanning",
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["blocker.js"],
+            "css": ["blocker.css"]
+        }
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    }
+}
