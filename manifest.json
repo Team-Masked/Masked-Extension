@@ -1,10 +1,10 @@
 {
     "manifest_version": 2,
     "name": "Masked Extension",
-    "description": "Helping make ethical pornography a reality",
+    "description": "The face you know, the story you don't.",
     "version": "0.1",
     "incognito": "spanning",
-    "permissions": ["tabs"],
+    "permissions": ["tabs", "context_menus"],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
@@ -12,6 +12,13 @@
             "css": ["blocker.css"]
         }
     ],
+    "icons": {
+        "128": "assets/icons/icon_128x128.png",
+        "48": "assets/icons/icon_48x48.png",
+        "32": "assets/icons/icon_32x32.png",
+        "24": "assets/icons/icon_24x24.png",
+        "16": "assets/icons/icon_16x16.png"
+    },
     "background": {
         "scripts": ["background.js"],
         "persistent": false
