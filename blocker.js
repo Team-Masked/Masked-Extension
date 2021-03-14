@@ -16,11 +16,18 @@ logo.src =
     "https://dl3.pushbulletusercontent.com/DHT4I1JS8jT3OeHbtgW94ecLyo5XvegT/masked-logo.svg";
 logoContainer.appendChild(logo);
 blocker.appendChild(logoContainer);
+
+const tooltip = document.createElement("div");
+tooltip.className = "tooltip";
 const textContainer = document.createElement("div");
 textContainer.className = "text-container";
 textContainer.innerText =
     "This video might contain unethical content. Click to find out more.";
-blocker.appendChild(textContainer);
+tooltip.appendChild(textContainer);
+const tooltiptext = document.createElement("span");
+tooltiptext.className = "tooltiptext";
+tooltip.appendChild(tooltiptext);
+blocker.appendChild(tooltip);
 
 const renderBlocker = (videoPlayer) => {
     if (tobeblocked) {
@@ -51,9 +58,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         videoPlayer = document.querySelector("video");
         console.log(videoPlayer);
         setInterval(() => {
-            videoPlayer = document.querySelector("video");
-            console.log(videoPlayer);
-            videoPlayer.pause();
+            if (tobeblocked) {
+                videoPlayer = document.querySelector("video");
+                console.log(videoPlayer);
+                videoPlayer.pause();
+            }
         }, 5000);
 
         if (request.redirectURL !== undefined) {
@@ -79,6 +88,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         videoPlayer.onplay = () => {
             renderBlocker(videoPlayer);
         };
+        if (request.contains !== undefined) {
+            if (tobeblocked) {
+                document.querySelector(
+                    ".tooltiptext"
+                ).innerText = `This video has been reported as it contains: ${request.contains}`;
+            }
+        }
         // setInterval(() => {
 
         // }, 10);
