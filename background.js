@@ -17,9 +17,18 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             console.log("Blocking", tab.url);
             chrome.tabs.sendMessage(
                 tabId,
-                { blockContent: true },
+                { blockContent: true, redirectURL: "google.com" },
                 (response) => {
-                    console.log(response.status);
+                    console.log(response?.status);
+                }
+            );
+        } else {
+            console.log("Unblocking", tab.url);
+            chrome.tabs.sendMessage(
+                tabId,
+                { blockContent: false },
+                (response) => {
+                    console.log(response?.status);
                 }
             );
         }
