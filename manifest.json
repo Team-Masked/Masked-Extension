@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "Masked Extension",
-    "description": "The face you know, the story you don't.",
-    "version": "0.1",
+    "description": "The face you know, the story you don't. Blocks content that has been produced unethically.",
+    "version": "1.0",
     "incognito": "spanning",
     "permissions": ["tabs", "contextMenus", "storage"],
     "content_scripts": [
