@@ -1,7 +1,4 @@
-// FIX ME : Whitelist url
-
 // ############################## Blocker ##################################
-//Listen for when a Tab changes state
 const BLOCKED_URLS = ["https://www.youtube.com/watch?v=DXUAyRRkI6k"];
 let WHITELISTED_URLS = [];
 chrome.storage.sync.get("sites", (response) => {
@@ -20,19 +17,18 @@ const isWhitelistedURL = (url) => {
     console.log("Whitelisted URL: ", WHITELISTED_URLS);
     for (whitelistedURL of WHITELISTED_URLS) {
         const pattern = new RegExp(whitelistedURL);
+        console.log(pattern, url, pattern.test(url));
         if (pattern.test(url)) {
             return true;
         }
     }
     return false;
 };
+//Listen for when a Tab changes state
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo && changeInfo.status == "complete") {
         console.log("Tab updated: ", tabId, changeInfo, tab);
 
-        // chrome.tabs.sendMessage(tabId, {data: tab}, function(response) {
-        //     console.log(response);
-        // });
         if (isBlockedURL(tab.url) && !isWhitelistedURL(tab.url)) {
             console.log("Blocking", tab.url);
             chrome.tabs.sendMessage(tabId, {
